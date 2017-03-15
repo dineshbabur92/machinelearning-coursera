@@ -83,7 +83,19 @@ end
 
 %size(y1)
 %size(a3')
-J = sum(sum( (-1 .* (y1 .* log(a3'))) - ((1 .- y1) .* log(1 .- a3')) ))/m;
+J = (sum(sum( (-1 .* (y1 .* log(a3'))) - ((1 .- y1) .* log(1 .- a3')) ))/m) + ((lambda/(2*m)) * (sum(sum(Theta1(:,2:end) .^ 2 )) + sum(sum(Theta2(:, 2:end) .^ 2)))) ;
+
+delta3 = a3 - y1';
+delta2 = (Theta2' * delta3)(2:end, :) .* sigmoidGradient(z2);
+
+Theta2_grad = Theta2_grad + (delta3 * a2');
+Theta1_grad = Theta1_grad + (delta2 * a1');
+
+Theta2_grad = (Theta2_grad ./ m) +  [zeros(size(Theta2)(1), 1) ((Theta2(:, 2:end) .* (lambda/m)))];
+Theta1_grad = (Theta1_grad ./ m)  +  [zeros(size(Theta1)(1), 1) ((Theta1(:, 2:end) .* (lambda/m)))];
+
+
+
 
 
 
